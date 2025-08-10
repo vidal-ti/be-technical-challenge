@@ -1,10 +1,3 @@
-node_modules
-dist
-.env
-
-
-
-
 # Node modules
 node_modules/
 
@@ -18,10 +11,12 @@ pnpm-debug.log*
 
 # Build output
 dist/
+functions/lib/
 
 # Environment variables
 .env
 .env.*
+functions/.env
 
 # TypeScript cache
 *.tsbuildinfo
@@ -31,3 +26,17 @@ dist/
 .idea/
 .DS_Store
 Thumbs.db
+
+# Firebase
+firebase-debug.log
+firebase-debug.*.log
+.firebase/
+firebase-service-account.json
+*.serviceaccount.json
+
+# Firebase emulators
+firestore-debug.log
+ui-debug.log
+
+# Google
+firebase-service-account.json

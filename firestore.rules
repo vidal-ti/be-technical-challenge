@@ -1,0 +1,39 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isValidEmail(email) {
+      return email is string && 
+             email.matches('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$');
+    }
+    
+    function isValidUserData(data) {
+      return data.keys().hasAll(['email', 'password', 'name']) &&
+             isValidEmail(data.email) &&
+             data.password is string &&
+             data.name is string;
+    }
+    
+    function isValidTaskData(data) {
+      return data.keys().hasAll(['title', 'description', 'status', 'userId']) &&
+             data.title is string &&
+             data.description is string &&
+             data.status in ['pending', 'completed'] &&
+             data.userId is string;
+    }
+    
+    match /users/{userId} {
+      allow read: if true;
+      allow create: if isValidUserData(request.resource.data);
+      allow update: if isValidUserData(request.resource.data);
+      allow delete: if false;
+    }
+    
+    match /tasks/{taskId} {
+      allow read: if true;
+      allow create: if isValidTaskData(request.resource.data);
+      allow update: if isValidTaskData(request.resource.data) &&
+                      resource.data.userId == request.resource.data.userId;
+      allow delete: if true;
+    }
+  }
+}
